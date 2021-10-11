@@ -118,7 +118,7 @@
                   class="flex px-6 py-6 whitespace-nowrap text-sm text-gray-500"
                 >
                   <div class="mr-1 text-sm text-gray-900">
-                    {{ product.regular_price.value }}
+                    {{ product.regular_price.value * product.qty }}
                   </div>
                   <div class="text-sm text-gray-500">
                     {{ product.regular_price.currency }}
