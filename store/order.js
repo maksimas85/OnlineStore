@@ -3,7 +3,7 @@ export const state = () => ({
 });
 
 export const mutations = {
-  add(state, product) {
+  addProductInCart(state, product) {
     state.cart.push(product);
   },
   removeProductFromCart(state, payload) {
@@ -17,7 +17,7 @@ export const actions = {
     commit("removeProductFromCart", payload);
   },
   addProductInCart({ commit }, product) {
-    commit("add", product);
+    commit("addProductInCart", product);
   },
 };
 

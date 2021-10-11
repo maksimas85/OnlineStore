@@ -18,6 +18,7 @@
                     text-gray-500
                     uppercase
                     tracking-wider
+                    sm:p-1
                   "
                 >
                   Item
@@ -32,9 +33,12 @@
                     text-gray-500
                     uppercase
                     tracking-wider
+                    sm:p-1
+                    smx:text-center
+                    mdx:text-left
                   "
                 >
-                  Price
+                  <span class="sm:ml-2 smx:m-0">Price</span>
                 </th>
                 <th
                   scope="col"
@@ -46,6 +50,7 @@
                     text-gray-500
                     uppercase
                     tracking-wider
+                    sm:p-1 sm:text-center
                   "
                 >
                   Qty
@@ -60,19 +65,22 @@
                     text-gray-500
                     uppercase
                     tracking-wider
+                    sm:p-1
+                    smx:text-center
+                    mdx:text-left
                   "
                 >
-                  Total
+                  <span class="sm:ml-4 smx:m-0">Total</span>
                 </th>
-                <th scope="col" class="relative px-6 py-3">
-                  <span class="sr-only"></span>
+                <th scope="col" class="relative px-6 py-3 sm:p-1">
+                  <span></span>
                 </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="(product, index) in products" :key="index">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
+                <td class="px-6 py-4 whitespace-nowrap sm:p-1">
+                  <div class="flex items-center sm:flex-col mdx:flex-row">
                     <div class="flex-shrink-0 h-10 w-10">
                       <img
                         class="h-10 w-10 rounded-full"
@@ -80,9 +88,21 @@
                         alt=""
                       />
                     </div>
-                    <div class="flex ml-4">
-                      <div class="mr-1 text-sm font-medium text-gray-900">
-                        {{ product.brand }}
+                    <div class="flex ml-4 sm:ml-1 sm:flex-col md:flex-row">
+                      <div
+                        class="
+                          mr-1
+                          text-sm
+                          font-medium
+                          text-gray-900
+                          sm:text-center
+                        "
+                      >
+                        {{
+                          brands.find((brand) => brand.id === product.brand)
+                            .title
+                        }}
+                        <span>/</span>
                       </div>
                       <div class="text-sm text-gray-500">
                         {{ product.title }}
@@ -90,49 +110,85 @@
                     </div>
                   </div>
                 </td>
-                <td class="flex px-6 py-6 whitespace-nowrap">
-                  <div class="mr-1 text-sm text-gray-900">
+                <td
+                  class="
+                    flex
+                    px-6
+                    py-6
+                    whitespace-nowrap
+                    sm:mt-6 sm:p-1 sm:flex-col
+                    mdx:flex-row mdx:mt-3
+                  "
+                >
+                  <div
+                    class="
+                      mdx:mr-1
+                      text-sm text-gray-900
+                      sm:text-center sm:text-xs sm:m-0
+                    "
+                  >
                     {{ product.regular_price.value }}
                   </div>
-                  <div class="text-sm text-gray-500">
+                  <div class="text-sm text-gray-500 sm:text-center sm:text-xs">
                     {{ product.regular_price.currency }}
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <button
-                    class="text-lg text-red-400"
-                    @click="removeProduct(product.id)"
-                  >
-                    <span class="pt-6">-</span>
-                  </button>
-                  <span
-                    class="
-                      px-2
-                      inline-flex
-                      text-xs
-                      leading-5
-                      font-semibold
-                      rounded-full
-                      bg-green-100
-                      text-green-800
-                    "
-                  >
-                    {{ product.qty }}
-                  </span>
-                  <button
-                    class="text-lg text-green-400"
-                    @click="addProduct(product)"
-                  >
-                    <span class="pt-6">+</span>
-                  </button>
+                <td class="px-6 py-4 whitespace-nowrap sm:p-1">
+                  <div class="flex items-center">
+                    <button
+                      class="flex-grow text-lg text-red-400 h-full"
+                      @click="removeProduct(product.id)"
+                    >
+                      <span>-</span>
+                    </button>
+                    <span
+                      class="
+                        px-2
+                        inline-flex
+                        text-xs
+                        leading-5
+                        font-semibold
+                        rounded-full
+                        bg-green-100
+                        text-green-800
+                        h-5
+                      "
+                    >
+                      {{ product.qty }}
+                    </span>
+                    <button
+                      class="text-lg text-green-400 h-full flex-grow"
+                      @click="addProduct(product)"
+                    >
+                      <span>+</span>
+                    </button>
+                  </div>
                 </td>
                 <td
-                  class="flex px-6 py-6 whitespace-nowrap text-sm text-gray-500"
+                  class="
+                    flex
+                    px-6
+                    py-6
+                    whitespace-nowrap
+                    text-sm text-gray-500
+                    sm:p-1 sm:flex-col sm:mt-6 sm:p-1 sm:flex-col
+                    mdx:flex-row mdx:mt-0
+                  "
                 >
-                  <div class="mr-1 text-sm text-gray-900">
-                    {{ product.regular_price.value * product.qty }}
+                  <div
+                    class="
+                      mdx:mr-1
+                      text-sm text-gray-900
+                      sm:text-center sm:text-xs sm:m-0
+                    "
+                  >
+                    {{
+                      Number(product.regular_price.value * product.qty).toFixed(
+                        2
+                      )
+                    }}
                   </div>
-                  <div class="text-sm text-gray-500">
+                  <div class="text-sm text-gray-500 sm:text-center sm:text-xs">
                     {{ product.regular_price.currency }}
                   </div>
                 </td>
@@ -143,11 +199,15 @@
                     whitespace-nowrap
                     text-right text-sm
                     font-medium
+                    sm:p-1
                   "
                 >
-                  <button @click="removeFromCart(product.id, product.qty)">
+                  <button
+                    class="flex"
+                    @click="removeFromCart(product.id, product.qty)"
+                  >
                     <img
-                      class="v-8 h-8"
+                      class="v-8 h-8 justify-center"
                       src="../assets/image/remove.png"
                       alt="#"
                     />
@@ -168,15 +228,22 @@
 
 <script>
 export default {
-  layout: "orderlayout",
+  layout: "cart",
   computed: {
     products() {
       return this.filterItems(this.$store.getters["order/getProductsCart"]);
     },
+    brands() {
+      return this.$store.getters["brands/getBrands"];
+    },
     subTotal() {
-      return this.products.reduce((acc, item) => {
-        return (acc = acc + item.qty * item.regular_price.value);
-      }, 0);
+      return Number(
+        this.products
+          .reduce((acc, item) => {
+            return (acc = acc + item.qty * item.regular_price.value);
+          }, 0)
+          .toFixed(2)
+      );
     },
   },
   methods: {
@@ -185,7 +252,6 @@ export default {
     },
 
     removeProduct(id) {
-      console.log("REMOVED!!!!");
       this.$store.dispatch("order/removeFromCart", { id, qty: 1 });
     },
     addProduct(product) {

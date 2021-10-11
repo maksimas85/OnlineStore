@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nuxt-link class="flex w-12 cursor-pointer relative" to="/orderpage">
+    <nuxt-link class="flex w-12 cursor-pointer relative" to="/cartpage">
       <img class="v-10 h-10" src="../assets/image/orderlogo.png" alt="#" />
       <span
         v-if="count"
