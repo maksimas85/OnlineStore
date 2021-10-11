@@ -145,6 +145,10 @@
             </tbody>
           </table>
         </div>
+        <div class="flex justify-end py-2 pr-10">
+          <p class="pr-2">Subtotal:</p>
+          <span>${{ subTotal }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -156,6 +160,11 @@ export default {
   computed: {
     products() {
       return this.$store.getters["order/getProductsOrder"];
+    },
+    subTotal() {
+      return this.products.reduce((acc, item) => {
+        return (acc = acc + item.qty * item.regular_price.value);
+      }, 0);
     },
   },
   methods: {
