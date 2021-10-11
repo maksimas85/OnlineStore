@@ -99,6 +99,12 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
+                  <button
+                    class="text-lg text-red-400"
+                    @click="removeProduct(product.id)"
+                  >
+                    <span class="pt-6">-</span>
+                  </button>
                   <span
                     class="
                       px-2
@@ -113,6 +119,12 @@
                   >
                     {{ product.qty }}
                   </span>
+                  <button
+                    class="text-lg text-green-400"
+                    @click="addProduct(product)"
+                  >
+                    <span class="pt-6">+</span>
+                  </button>
                 </td>
                 <td
                   class="flex px-6 py-6 whitespace-nowrap text-sm text-gray-500"
@@ -133,7 +145,7 @@
                     font-medium
                   "
                 >
-                  <button @click="removeOrder">
+                  <button @click="removeFromCart(product.id, product.qty)">
                     <img
                       class="v-8 h-8"
                       src="../assets/image/remove.png"
@@ -159,7 +171,7 @@ export default {
   layout: "orderlayout",
   computed: {
     products() {
-      return this.$store.getters["order/getProductsOrder"];
+      return this.filterItems(this.$store.getters["order/getProductsCart"]);
     },
     subTotal() {
       return this.products.reduce((acc, item) => {
@@ -168,8 +180,29 @@ export default {
     },
   },
   methods: {
-    removeOrder() {
-      this.$store.commit("order/remove", this.product);
+    removeFromCart(id, qty) {
+      this.$store.dispatch("order/removeFromCart", { id, qty });
+    },
+
+    removeProduct(id) {
+      console.log("REMOVED!!!!");
+      this.$store.dispatch("order/removeFromCart", { id, qty: 1 });
+    },
+    addProduct(product) {
+      this.$store.dispatch("order/addProductInCart", product);
+    },
+
+    filterItems(query) {
+      let newArray = [];
+      query.forEach((each) => {
+        if (!newArray.some((r) => r.id === each.id)) {
+          let tmp = query.filter((item) => item.id === each.id);
+          let product = Object.assign({}, each);
+          product.qty = tmp.length;
+          newArray.push(product);
+        }
+      });
+      return newArray;
     },
   },
 };
