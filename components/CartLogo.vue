@@ -30,7 +30,7 @@
 export default {
   computed: {
     count() {
-      return this.$store.getters["order/productsCart"];
+      return this.$store.getters["order/productsCartLength"];
     },
   },
 };

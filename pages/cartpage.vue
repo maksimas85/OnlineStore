@@ -204,7 +204,7 @@
                 >
                   <button
                     class="flex"
-                    @click="removeFromCart(product.id, product.qty)"
+                    @click="removeFromCart(product.id)"
                   >
                     <img
                       class="v-8 h-8 justify-center"
@@ -231,7 +231,7 @@ export default {
   layout: "cart",
   computed: {
     products() {
-      return this.filterItems(this.$store.getters["order/getProductsCart"]);
+      return this.$store.getters["order/getProductsCart"];
     },
     brands() {
       return this.$store.getters["brands/getBrands"];
@@ -247,28 +247,14 @@ export default {
     },
   },
   methods: {
-    removeFromCart(id, qty) {
-      this.$store.dispatch("order/removeFromCart", { id, qty });
+    removeFromCart(id) {
+      this.$store.dispatch("order/removeFromCart", { id });
     },
-
     removeProduct(id) {
-      this.$store.dispatch("order/removeFromCart", { id, qty: 1 });
+      this.$store.dispatch("order/removeProductFromCart", { id });
     },
     addProduct(product) {
       this.$store.dispatch("order/addProductInCart", product);
-    },
-
-    filterItems(query) {
-      let newArray = [];
-      query.forEach((each) => {
-        if (!newArray.some((r) => r.id === each.id)) {
-          let tmp = query.filter((item) => item.id === each.id);
-          let product = Object.assign({}, each);
-          product.qty = tmp.length;
-          newArray.push(product);
-        }
-      });
-      return newArray;
     },
   },
 };

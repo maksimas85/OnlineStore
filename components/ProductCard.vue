@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-2xl mx-auto py-6 px-2 sm:py-2 sm:px-2 lg:max-w-7xl lg:px-6">
-    <a class="group cursor-pointer" @click="addProductInCart">
+    <a class="group cursor-pointer" @click="addProductInCart(product)">
       <div
         class="
           w-full
@@ -39,16 +39,16 @@ export default {
   props: ["product"],
   data() {
     return {
-      newProduct: null,
-      defaultQty: {
-        qty: 1,
-      },
+      // newProduct: null,
+      // defaultQty: {
+      //   qty: 1,
+      // },
     };
   },
   methods: {
-    addProductInCart() {
-      this.newProduct = Object.assign(this.product, this.defaultQty);
-      this.$store.dispatch('order/addProductInCart', this.newProduct);
+    addProductInCart(item) {
+      // this.newProduct = Object.assign(this.product, this.defaultQty);
+      this.$store.dispatch('order/addProductInCart', item);
     },
   },
 };
