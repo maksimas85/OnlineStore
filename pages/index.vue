@@ -1,11 +1,16 @@
 <template>
-  <h1 class="sm:py-1 sm:px-4 lg:px-6">
-    Please select a brand that interests you
-  </h1>
+  <ProductList :productList="products" />
 </template>
 
 <script>
+import ProductList from "~/components/ProductList";
 export default {
+  components: { ProductList },
   layout: "default",
+  computed: {
+    products() {
+      return this.$store.state.products;
+    },
+  },
 };
 </script>

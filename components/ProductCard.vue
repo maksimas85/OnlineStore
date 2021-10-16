@@ -22,10 +22,13 @@
           "
         />
       </div>
-      <h3 class="mt-4 text-sm text-gray-700">
+      <div class="mr-1 mt-4 text-sm font-medium text-gray-900 sm:text-center">
+        {{ brands.find((brand) => brand.id === product.brand).title }}
+      </div>
+      <h3 class="mt-1 text-sm text-gray-700 sm:text-center">
         {{ product.title }}
       </h3>
-      <p class="mt-1 text-lg font-medium text-gray-900">
+      <p class="mt-1 text-lg font-medium text-gray-900 sm:text-center">
         ${{ product.regular_price.value }}
         {{ product.regular_price.currency }}
       </p>
@@ -37,18 +40,22 @@
 export default {
   name: "ProductCard",
   props: ["product"],
-  data() {
-    return {
-      // newProduct: null,
-      // defaultQty: {
-      //   qty: 1,
-      // },
-    };
+  computed: {
+    brands() {
+      return this.$store.getters["brands/getBrands"];
+    },
   },
   methods: {
     addProductInCart(item) {
-      // this.newProduct = Object.assign(this.product, this.defaultQty);
-      this.$store.dispatch('order/addProductInCart', item);
+      this.$store.dispatch("order/addProductInCart", item);
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(this.$store.getters["order/getProductsCart"])
+      );
+      localStorage.setItem(
+        "brands",
+        JSON.stringify(this.$store.getters["brands/getBrands"])
+      );
     },
   },
 };

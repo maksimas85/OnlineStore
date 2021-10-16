@@ -81,9 +81,9 @@
               <tr v-for="(product, index) in products" :key="index">
                 <td class="px-6 py-4 whitespace-nowrap sm:p-1">
                   <div class="flex items-center sm:flex-col mdx:flex-row">
-                    <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10">
                       <img
-                        class="h-10 w-10 rounded-full"
+                        class="h-10 w-10"
                         :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets/images/${product.id}.png`"
                         alt=""
                       />
@@ -143,7 +143,9 @@
                     </button>
                     <span
                       class="
-                        px-2
+                        w-7
+                        px-1
+                        justify-center
                         inline-flex
                         text-xs
                         leading-5
@@ -173,11 +175,12 @@
                     text-sm text-gray-500
                     sm:p-1 sm:flex-col sm:mt-6 sm:p-1 sm:flex-col
                     mdx:flex-row mdx:mt-0
+                    items-center
                   "
                 >
                   <div
                     class="
-                      mdx:mr-1
+                      w-10
                       text-sm text-gray-900
                       sm:text-center sm:text-xs sm:m-0
                     "
@@ -188,7 +191,7 @@
                       )
                     }}
                   </div>
-                  <div class="text-sm text-gray-500 sm:text-center sm:text-xs">
+                  <div class="w-10 text-sm text-gray-500 sm:text-center mdx:text-left sm:text-xs">
                     {{ product.regular_price.currency }}
                   </div>
                 </td>
@@ -202,10 +205,7 @@
                     sm:p-1
                   "
                 >
-                  <button
-                    class="flex"
-                    @click="removeFromCart(product.id)"
-                  >
+                  <button class="flex" @click="removeFromCart(product.id)">
                     <img
                       class="v-8 h-8 justify-center"
                       src="../assets/image/remove.png"
@@ -249,12 +249,25 @@ export default {
   methods: {
     removeFromCart(id) {
       this.$store.dispatch("order/removeFromCart", { id });
+      this.actionLocalStorage();
     },
     removeProduct(id) {
       this.$store.dispatch("order/removeProductFromCart", { id });
+      this.actionLocalStorage();
     },
     addProduct(product) {
       this.$store.dispatch("order/addProductInCart", product);
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(this.$store.getters["order/getProductsCart"])
+      );
+    },
+    actionLocalStorage() {
+      localStorage.removeItem("cart");
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(this.$store.getters["order/getProductsCart"])
+      );
     },
   },
 };

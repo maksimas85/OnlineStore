@@ -6,12 +6,12 @@
         v-if="count"
         class="
           absolute
-          top-0
-          right-0
+          -top-1
+          -right-1
           border border-current
           rounded-full
-          h-5
-          w-5
+          h-6
+          w-6
           flex
           items-center
           justify-center

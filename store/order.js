@@ -3,13 +3,16 @@ export const state = () => ({
 });
 
 export const mutations = {
+  loadingCart(state, payload) {
+    state.cart = payload ? payload : [];
+  },
   addProductInCart(state, product) {
     let foundProduct = state.cart.find((item) => item.id === product.id);
     if (foundProduct) {
       foundProduct.qty++;
     } else {
-      state.cart.push(product);
       this._vm.$set(product, "qty", 1);
+      state.cart.push(product);
     }
   },
   removeFromCart(state, payload) {
@@ -22,6 +25,9 @@ export const mutations = {
     return state.cart.map((item, i) => {
       if (i === index) {
         item.qty--;
+        if (!item.qty) {
+          return state.cart.splice(index, 1);
+        }
       }
     });
   },
@@ -36,6 +42,9 @@ export const actions = {
   },
   addProductInCart({ commit }, product) {
     commit("addProductInCart", product);
+  },
+  loadingCartFromLocalStorage({ commit }, payload) {
+    commit("loadingCart", payload);
   },
 };
 
