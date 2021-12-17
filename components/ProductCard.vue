@@ -12,7 +12,7 @@
         "
       >
         <img
-          :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets/images/${product.id}.png`"
+          :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets${product.image}`"
           :alt="product.title"
           class="
             w-full
@@ -33,6 +33,36 @@
         {{ product.regular_price.currency }}
       </p>
     </a>
+    <div v-if="product.configurable_options" class="flex flex-col">
+      <div
+        class="flex flex-row my-1"
+        v-for="option in product.configurable_options.filter(
+          (el) => el.attribute_id === 93
+        )"
+      >
+        <div
+          v-for="color in option.values"
+          class="w-7 h-4 mr-1 border-2 border-solid border-black cursor-pointer"
+          :style="{ backgroundColor: color.value }"
+          @click="filterOption(color.value_index)"
+        />
+      </div>
+      <div
+        class="flex flex-row"
+        v-for="option in product.configurable_options.filter(
+          (el) => el.attribute_id === 144
+        )"
+      >
+        <div
+          v-for="size in option.values"
+          class="w-7 h-4 mr-1 border-2 border-solid border-black cursor-pointer"
+        >
+          <p class="flex justify-center items-center w-full h-full text-xs" :style="{ backgroundColor: size.value_index === 1442 ? 'white' : 'green'}">
+            {{ size.label }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,6 +70,14 @@
 export default {
   name: "ProductCard",
   props: ["product"],
+  data() {
+    return {
+      variants: this.$props.product.variants
+    }
+  },
+  mounted() {
+    console.log(this.$props.product.variants);
+  },
   computed: {
     brands() {
       return this.$store.getters["brands/getBrands"];
@@ -57,6 +95,9 @@ export default {
         JSON.stringify(this.$store.getters["brands/getBrands"])
       );
     },
+    filterOption(id) {
+      return
+    }
   },
 };
 </script>

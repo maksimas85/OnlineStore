@@ -11,7 +11,7 @@ export const mutations = {
 export const actions = {
   async getProducts({ commit }) {
     const products = await this.$axios.$get(
-      "https://raw.githubusercontent.com/fe-side/vue-test/master/assets/products.json"
+      "https://raw.githubusercontent.com/fe-side/vue-test/master/assets/level3/products.json"
     );
     commit("setProducts", products);
   },
