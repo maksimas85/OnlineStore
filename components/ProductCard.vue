@@ -42,10 +42,10 @@
       >
         <div
           v-for="color in option.values"
-          class="w-7 h-4 mr-1 border-2 border-solid border-black cursor-pointer"
+          class="w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black"
           :style="{ backgroundColor: color.value }"
-          @click="filterOption(color.value_index)"
-        />
+          @click="filterOption(color.value_index, variants)"
+        ></div>
       </div>
       <div
         class="flex flex-row"
@@ -75,9 +75,6 @@ export default {
       variants: this.$props.product.variants
     }
   },
-  mounted() {
-    console.log(this.$props.product.variants);
-  },
   computed: {
     brands() {
       return this.$store.getters["brands/getBrands"];
@@ -95,8 +92,13 @@ export default {
         JSON.stringify(this.$store.getters["brands/getBrands"])
       );
     },
-    filterOption(id) {
-      return
+    filterOption(id, variants) {
+      const sizeOption = variants.filter(el => el.attributes.find(i => i.value_index === id));
+      const filterSize = sizeOption.map(item => {
+        return item.attributes.filter(i => i.code === "size")
+      })
+      console.log(filterSize.flat())
+      return filterSize.flat();
     }
   },
 };
