@@ -12,7 +12,7 @@
         "
       >
         <img
-          :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets${product.image}`"
+          :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets${img}`"
           :alt="product.title"
           class="
             w-full
@@ -42,11 +42,12 @@
       >
         <div
           v-for="color in option.values"
-          class="w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black"
+          class="w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
           :style="{ backgroundColor: color.value }"
-          @click="filterOption(color.value_index, variants)"
+          @click="filterOption(color.value_index, variants, confOptions)"
         ></div>
       </div>
+
       <div
         class="flex flex-row"
         v-for="option in product.configurable_options.filter(
@@ -54,12 +55,13 @@
         )"
       >
         <div
-          v-for="size in option.values"
-          class="w-7 h-4 mr-1 border-2 border-solid border-black cursor-pointer"
+          v-for="size in (sizeArr || option.values)"
+          class="w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
+          @click="filterProduct(size.value_index)"
         >
-          <p class="flex justify-center items-center w-full h-full text-xs" :style="{ backgroundColor: size.value_index === 1442 ? 'white' : 'green'}">
+          <span class="flex justify-center items-center w-full h-full text-xs">
             {{ size.label }}
-          </p>
+          </span>
         </div>
       </div>
     </div>
@@ -72,7 +74,11 @@ export default {
   props: ["product"],
   data() {
     return {
-      variants: this.$props.product.variants
+      variants: this.$props.product.variants,
+      confOptions: this.$props.product.configurable_options,
+      sizeArr: null,
+      lab: null,
+      img: this.$props.product.image,
     }
   },
   computed: {
@@ -92,13 +98,22 @@ export default {
         JSON.stringify(this.$store.getters["brands/getBrands"])
       );
     },
-    filterOption(id, variants) {
+    filterOption(id, variants, opt) {
       const sizeOption = variants.filter(el => el.attributes.find(i => i.value_index === id));
+      console.log(sizeOption);
+      // this.img = sizeOption.find(el => el).product.image;
       const filterSize = sizeOption.map(item => {
         return item.attributes.filter(i => i.code === "size")
-      })
-      console.log(filterSize.flat())
-      return filterSize.flat();
+      }).flat();
+      const objSize = opt.find(el => el.attribute_code === "size");
+      const sizeIdx = filterSize.map(s => s.value_index);
+      console.log(sizeIdx);
+      this.sizeArr = sizeIdx.map(l => {
+        return objSize.values.find(el => el.value_index === l)
+      });
+    },
+    filterProduct(id) {
+      console.log(id);
     }
   },
 };
