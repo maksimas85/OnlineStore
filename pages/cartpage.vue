@@ -84,28 +84,62 @@
                     <div class="h-10 w-10">
                       <img
                         class="h-10 w-10"
-                        :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets/images/${product.id}.png`"
+                        :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets${product.image}`"
                         alt=""
                       />
                     </div>
-                    <div class="flex ml-4 sm:ml-1 sm:flex-col md:flex-row">
-                      <div
-                        class="
-                          mr-1
-                          text-sm
-                          font-medium
-                          text-gray-900
-                          sm:text-center
-                        "
-                      >
-                        {{
-                          brands.find((brand) => brand.id === product.brand)
-                            .title
-                        }}
-                        <span>/</span>
+                    <div class="flex flex-col">
+                      <div class="flex ml-4 sm:ml-1 sm:flex-col md:flex-row">
+                        <div
+                          class="
+                            mr-1
+                            text-sm
+                            font-medium
+                            text-gray-900
+                            sm:text-center
+                          "
+                        >
+                          {{
+                            brands.find((brand) => brand.id === product.brand)
+                              .title
+                          }}
+                          <span>/</span>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          {{ product.title }}
+                        </div>
                       </div>
-                      <div class="text-sm text-gray-500">
-                        {{ product.title }}
+                      <div v-if="product.type === 'configurable'">
+                        <div
+                          v-for="variant in product.variants.filter(
+                            (el) => el.product.id === product.id
+                          )"
+                        >
+                          <div
+                            v-for="attr in variant.attributes"
+                            class="
+                              ml-4
+                              sm:ml-1
+                              text-sm
+                              font-medium
+                              text-gray-900
+                            "
+                          >
+                            <span
+                              >{{
+                                attr.code.charAt(0).toUpperCase() +
+                                attr.code.slice(1)
+                              }}:
+                              {{
+                                product.configurable_options
+                                  .find((el) => el.attribute_code === attr.code)
+                                  .values.find(
+                                    (i) => i.value_index === attr.value_index
+                                  ).label
+                              }}</span
+                            >
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -191,7 +225,15 @@
                       )
                     }}
                   </div>
-                  <div class="w-10 text-sm text-gray-500 sm:text-center mdx:text-left sm:text-xs">
+                  <div
+                    class="
+                      w-10
+                      text-sm text-gray-500
+                      sm:text-center
+                      mdx:text-left
+                      sm:text-xs
+                    "
+                  >
                     {{ product.regular_price.currency }}
                   </div>
                 </td>
