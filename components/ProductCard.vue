@@ -40,14 +40,14 @@
           (el) => el.attribute_id === 93
         )"
       >
-        <ButtonOption
+        <ButtonColorOption
           v-for="(color, index) in option.values"
           :key="index"
           :color="color"
           @click.native="isClickedColor = index"
-          :style="{ borderColor: isClickedColor === index ? 'rgb(234 179 8)' : '' }"
+          :class="{ 'border-yellow-500': isClickedColor === index }"
           @changeColor="filterOption(color.value_index, variants, confOptions)"
-        ></ButtonOption>
+        ></ButtonColorOption>
       </div>
 
       <div
@@ -56,28 +56,29 @@
           (el) => el.attribute_id === 144
         )"
       >
-        <ButtonOption
-          v-for="(size, index) in (sizeArr || sOption.values)"
+        <ButtonSizeOption
+          v-for="(size, index) in sizeArr || sOption.values"
           :key="index"
           :size="size"
           @click.native="isClickedSize = index"
-          :style="{ borderColor: isClickedSize === index ? 'rgb(234 179 8)' : '' }"
+          :class="{ 'border-yellow-500': isClickedSize === index }"
           @changeSize="filterProduct(size.value_index)"
         >
           <span class="flex justify-center items-center w-full h-full text-xs">
             {{ size.label }}
           </span>
-        </ButtonOption>
+        </ButtonSizeOption>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ButtonOption from "~/components/ButtonOption";
+import ButtonOption from "~/components/ButtonColorOption";
+import ButtonSizeOption from "~/components/ButtonSizeOption";
 export default {
   name: "ProductCard",
-  components: { ButtonOption },
+  components: { ButtonOption, ButtonSizeOption },
   props: ["product"],
   data() {
     return {
@@ -88,8 +89,8 @@ export default {
       listProduct: [],
       curProduct: null,
       isClickedColor: null,
-      isClickedSize: null
-    }
+      isClickedSize: null,
+    };
   },
   computed: {
     brands() {
@@ -98,7 +99,14 @@ export default {
   },
   methods: {
     addProductInCart(item) {
-      this.$store.dispatch("order/addProductInCart", {...item, id: this.curProduct?.product?.id || item.id});
+      if (item.type === "simple") {
+        this.$store.dispatch("order/addProductInCart", item);
+      } else if (item.type === "configurable" && this.curProduct?.product?.id) {
+        this.$store.dispatch("order/addProductInCart", {
+          ...item,
+          id: this.curProduct.product.id
+        });
+      }
       localStorage.setItem(
         "cart",
         JSON.stringify(this.$store.getters["order/getProductsCart"])
@@ -109,29 +117,33 @@ export default {
       );
     },
     filterOption(id, variants, opt) {
-      const sizeOption = variants.filter(el => el.attributes.find(i => i.value_index === id));
+      const sizeOption = variants.filter((el) =>
+        el.attributes.find((i) => i.value_index === id)
+      );
       this.listProduct = sizeOption;
 
       // this.img = sizeOption.find(el => el).product.image;
 
-      const filterSize = sizeOption.map(item => {
-        return item.attributes.filter(i => i.code === "size")
-      }).flat();
+      const filterSize = sizeOption
+        .map((item) => {
+          return item.attributes.filter((i) => i.code === "size");
+        })
+        .flat();
 
-      const objSize = opt.find(el => el.attribute_code === "size");
-      const sizeIdx = filterSize.map(s => s.value_index);
+      const objSize = opt.find((el) => el.attribute_code === "size");
+      const sizeIdx = filterSize.map((s) => s.value_index);
 
-      this.sizeArr = sizeIdx.map(l => {
-        return objSize.values.find(el => el.value_index === l)
+      this.sizeArr = sizeIdx.map((l) => {
+        return objSize.values.find((el) => el.value_index === l);
       });
     },
     filterProduct(id) {
       if (this.listProduct.length) {
-        this.curProduct = this.listProduct.find(item => {
-          return item.attributes.find(el => el.value_index === id)
-        })
+        this.curProduct = this.listProduct.find((item) => {
+          return item.attributes.find((el) => el.value_index === id);
+        });
       }
-    }
+    },
   },
 };
 </script>
