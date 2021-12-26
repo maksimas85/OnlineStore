@@ -1,25 +1,15 @@
 <template>
-  <div class="max-w-2xl mx-auto py-6 px-2 sm:py-2 sm:px-2 lg:max-w-7xl lg:px-6">
-    <a class="group cursor-pointer" @click="addProductInCart(product)">
-      <div
-        class="
-          w-full
-          aspect-w-1 aspect-h-1
-          bg-gray-200
-          rounded-lg
-          overflow-hidden
-          xl:aspect-w-7 xl:aspect-h-8
-        "
-      >
+  <div class="flex flex-col justify-between max-w-2xl mx-auto py-6 px-2 sm:py-2 sm:px-2 lg:max-w-7xl lg:px-6">
+    <a class="group cursor-pointer">
+      <div class="w-full h-32 aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+        <div v-if="!loading" class="item mt-4 w-full h-full">
+          <i class="loader --1"></i>
+        </div>
         <img
+          v-else
           :src="`https://raw.githubusercontent.com/fe-side/vue-test/master/assets${img}`"
           :alt="product.title"
-          class="
-            w-full
-            h-full
-            object-center object-cover
-            group-hover:opacity-75
-          "
+          class="w-full h-full object-center object-cover group-hover:opacity-75"
         />
       </div>
       <div class="mr-1 mt-4 text-sm font-medium text-gray-900 sm:text-center">
@@ -36,9 +26,7 @@
     <div v-if="product.configurable_options" class="flex flex-col">
       <div
         class="flex flex-row my-1"
-        v-for="option in product.configurable_options.filter(
-          (el) => el.attribute_id === 93
-        )"
+        v-for="option in product.configurable_options.filter((el) => el.attribute_id === 93)"
       >
         <ButtonColorOption
           v-for="(color, index) in option.values"
@@ -49,12 +37,9 @@
           @changeColor="filterOption(color.value_index, variants, confOptions)"
         ></ButtonColorOption>
       </div>
-
       <div
         class="flex flex-row"
-        v-for="sOption in product.configurable_options.filter(
-          (el) => el.attribute_id === 144
-        )"
+        v-for="sOption in product.configurable_options.filter((el) => el.attribute_id === 144)"
       >
         <ButtonSizeOption
           v-for="(size, index) in sizeArr || sOption.values"
@@ -70,16 +55,41 @@
         </ButtonSizeOption>
       </div>
     </div>
+    <div class="mt-5">
+      <div class="rounded-md shadow">
+        <button
+          @click="addProductInCart(product)"
+          class="
+            w-full
+            flex
+            items-center
+            justify-center
+            px-2
+            py-1
+            border border-transparent
+            text-base
+            font-medium
+            rounded-md
+            text-white
+            bg-indigo-600
+            hover:bg-indigo-700
+            md:text-lg
+          "
+        >
+          Add to cart
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import ButtonOption from "~/components/ButtonColorOption";
-import ButtonSizeOption from "~/components/ButtonSizeOption";
+import ButtonOption from '~/components/ButtonColorOption';
+import ButtonSizeOption from '~/components/ButtonSizeOption';
 export default {
-  name: "ProductCard",
+  name: 'ProductCard',
   components: { ButtonOption, ButtonSizeOption },
-  props: ["product"],
+  props: ['product'],
   data() {
     return {
       variants: this.$props.product.variants,
@@ -94,49 +104,50 @@ export default {
   },
   computed: {
     brands() {
-      return this.$store.getters["brands/getBrands"];
+      return this.$store.getters['brands/getBrands'];
+    },
+    loading() {
+      return this.$store.getters['products/getIsLoading'];
     },
   },
   methods: {
     addProductInCart(item) {
-      if (item.type === "simple") {
-        this.$store.dispatch("order/addProductInCart", item);
-      } else if (item.type === "configurable" && this.curProduct?.product?.id) {
-        this.$store.dispatch("order/addProductInCart", {
+      if (item.type === 'simple') {
+        this.$store.dispatch('order/addProductInCart', item);
+      }
+
+      if (item.type === 'configurable' && this.curProduct?.product?.id) {
+        this.$store.dispatch('order/addProductInCart', {
           ...item,
-          id: this.curProduct.product.id
+          id: this.curProduct.product.id,
         });
       }
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(this.$store.getters["order/getProductsCart"])
-      );
-      localStorage.setItem(
-        "brands",
-        JSON.stringify(this.$store.getters["brands/getBrands"])
-      );
+      localStorage.setItem('cart', JSON.stringify(this.$store.getters['order/getProductsCart']));
+      localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
     },
+
     filterOption(id, variants, opt) {
-      const sizeOption = variants.filter((el) =>
-        el.attributes.find((i) => i.value_index === id)
-      );
+      this.curProduct = null;
+      this.isClickedSize = null;
+      const sizeOption = variants.filter((el) => el.attributes.find((i) => i.value_index === id));
       this.listProduct = sizeOption;
 
       // this.img = sizeOption.find(el => el).product.image;
 
       const filterSize = sizeOption
         .map((item) => {
-          return item.attributes.filter((i) => i.code === "size");
+          return item.attributes.filter((i) => i.code === 'size');
         })
         .flat();
 
-      const objSize = opt.find((el) => el.attribute_code === "size");
+      const objSize = opt.find((el) => el.attribute_code === 'size');
       const sizeIdx = filterSize.map((s) => s.value_index);
 
       this.sizeArr = sizeIdx.map((l) => {
         return objSize.values.find((el) => el.value_index === l);
       });
     },
+
     filterProduct(id) {
       if (this.listProduct.length) {
         this.curProduct = this.listProduct.find((item) => {
@@ -147,3 +158,60 @@ export default {
   },
 };
 </script>
+
+<style>
+.item {
+  background: rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  transition: opacity 0.4s ease;
+}
+
+.loader {
+  --color: blue;
+  --size-mid: 6vmin;
+  --size-dot: 1.5vmin;
+  --size-bar: 0.4vmin;
+  --size-square: 3vmin;
+
+  position: relative;
+  width: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.loader::before,
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+}
+
+/**
+	loader --1
+**/
+.loader.--1::before {
+  width: var(--size-mid);
+  height: var(--size-mid);
+  border: 4px solid var(--color);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: loader-1 1s linear infinite;
+}
+
+.loader.--1::after {
+  width: calc(var(--size-mid) - 2px);
+  height: calc(var(--size-mid) - 2px);
+  border: 2px solid transparent;
+  border-top-color: var(--color);
+  border-radius: 50%;
+  animation: loader-1 0.6s linear reverse infinite;
+}
+
+@keyframes loader-1 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+</style>

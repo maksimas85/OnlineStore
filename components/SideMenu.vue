@@ -15,15 +15,15 @@
 
 <script>
 export default {
-  name: "SideMenu",
+  name: 'SideMenu',
   computed: {
     brands() {
-      return this.$store.getters["brands/getBrands"];
+      return this.$store.getters['brands/getBrands'];
     },
   },
   mounted() {
-    this.$store.dispatch("brands/getBrands");
-    this.$store.dispatch("products/getProducts");
+    this.$store.dispatch('brands/getBrands');
+    this.$store.dispatch('products/getProducts');
   },
 };
 </script>

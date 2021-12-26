@@ -20,7 +20,7 @@
           font-medium
           text-white
         "
-        >{{ count > 9 ? "9+" : count }}</span
+        >{{ count > 9 ? '9+' : count }}</span
       >
     </nuxt-link>
   </div>
@@ -30,7 +30,7 @@
 export default {
   computed: {
     count() {
-      return this.$store.getters["order/productsCartLength"];
+      return this.$store.getters['order/productsCartLength'];
     },
   },
 };

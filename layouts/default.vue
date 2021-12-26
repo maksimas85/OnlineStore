@@ -6,7 +6,9 @@
         <SideMenu />
       </div>
       <div class="w-5/6 sm:w-3/4 md:w-5/6">
-        <Nuxt />
+        <transition name="slide-fade">
+          <Nuxt />
+        </transition>
       </div>
     </div>
   </div>
@@ -17,3 +19,16 @@ export default {
   components: { SideMenu },
 };
 </script>
+
+<style>
+.slide-fade-enter-active {
+  transition: all .8s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
+</style>

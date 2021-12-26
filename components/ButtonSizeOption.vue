@@ -1,6 +1,13 @@
 <template>
   <button
-    class="w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
+    class="
+      w-7
+      h-4
+      mr-1
+      cursor-pointer
+      border-2 border-solid border-black
+      hover:border-yellow-500
+    "
     @click="changeSize"
   >
     <slot></slot>
@@ -9,12 +16,12 @@
 
 <script>
 export default {
-  name: 'ButtonSizeOption',
+  name: "ButtonSizeOption",
   props: ["size"],
   methods: {
     changeSize() {
-      this.$emit('changeSize');
-    }
-  }
-}
+      this.$emit("changeSize");
+    },
+  },
+};
 </script>

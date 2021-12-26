@@ -6,20 +6,14 @@
 </template>
 
 <script>
-import MainLogo from "~/components/MainLogo";
-import CartLogo from "~/components/CartLogo";
+import MainLogo from '~/components/MainLogo';
+import CartLogo from '~/components/CartLogo';
 export default {
-  name: "Header",
+  name: 'Header',
   components: { MainLogo, CartLogo },
   mounted() {
-    this.$store.dispatch(
-      "order/loadingCartFromLocalStorage",
-      JSON.parse(localStorage.getItem("cart"))
-    );
-    this.$store.dispatch(
-      "brands/loadingBrandsFromLocalStorage",
-      JSON.parse(localStorage.getItem("brands"))
-    );
+    this.$store.dispatch('order/loadingCartFromLocalStorage', JSON.parse(localStorage.getItem('cart')));
+    this.$store.dispatch('brands/loadingBrandsFromLocalStorage', JSON.parse(localStorage.getItem('brands')));
   },
 };
 </script>
