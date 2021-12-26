@@ -171,9 +171,6 @@ export default {
 .loader {
   --color: blue;
   --size-mid: 6vmin;
-  --size-dot: 1.5vmin;
-  --size-bar: 0.4vmin;
-  --size-square: 3vmin;
 
   position: relative;
   width: 50%;
@@ -188,9 +185,6 @@ export default {
   position: absolute;
 }
 
-/**
-	loader --1
-**/
 .loader.--1::before {
   width: var(--size-mid);
   height: var(--size-mid);
