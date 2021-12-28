@@ -14,11 +14,7 @@ module.exports = {
       xl: "1024px",
     },
     extend: {},
-    variants: {
-      // extend: {
-      //   textColor: ["active"],
-      // },
-    },
+    variants: {},
     plugins: [],
   },
 };

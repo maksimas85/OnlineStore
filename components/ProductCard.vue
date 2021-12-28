@@ -13,7 +13,7 @@
         />
       </div>
       <div class="mr-1 mt-4 text-sm font-medium text-gray-900 sm:text-center">
-        {{ brands.find((brand) => brand.id === product.brand).title }}
+        {{ currentBrand }}
       </div>
       <h3 class="mt-1 text-sm text-gray-700 sm:text-center">
         {{ product.title }}
@@ -23,36 +23,16 @@
         {{ product.regular_price.currency }}
       </p>
     </a>
-    <div v-if="product.configurable_options" class="flex flex-col">
-      <div
-        class="flex flex-row my-1"
-        v-for="option in product.configurable_options.filter((el) => el.attribute_id === 93)"
-      >
-        <ButtonColorOption
-          v-for="(color, index) in option.values"
-          :key="index"
-          :color="color"
-          @click.native="isClickedColor = index"
-          :class="{ 'border-yellow-500': isClickedColor === index }"
-          @changeColor="filterOption(color.value_index, variants, confOptions)"
-        ></ButtonColorOption>
-      </div>
-      <div
-        class="flex flex-row"
-        v-for="sOption in product.configurable_options.filter((el) => el.attribute_id === 144)"
-      >
-        <ButtonSizeOption
-          v-for="(size, index) in sizeArr || sOption.values"
-          :key="index"
-          :size="size"
-          @click.native="isClickedSize = index"
-          :class="{ 'border-yellow-500': isClickedSize === index }"
-          @changeSize="filterProduct(size.value_index)"
-        >
-          <span class="flex justify-center items-center w-full h-full text-xs">
-            {{ size.label }}
-          </span>
-        </ButtonSizeOption>
+    <div v-if="product.configurable_options">
+      <div v-for="(option, index) in product.configurable_options" :key="index">
+        <component
+          :is="option.attribute_code"
+          :value="option.values"
+          :isClicked="isClicked"
+          :sizeArr="sizeArr"
+          @changeColor="filterOption"
+          @changeSize="filterProduct"
+        ></component>
       </div>
     </div>
     <div class="mt-5">
@@ -84,11 +64,15 @@
 </template>
 
 <script>
-import ButtonOption from '~/components/ButtonColorOption';
 import ButtonSizeOption from '~/components/ButtonSizeOption';
+import ButtonColorOption from '~/components/ButtonColorOption';
+
 export default {
   name: 'ProductCard',
-  components: { ButtonOption, ButtonSizeOption },
+  components: {
+    size: ButtonSizeOption,
+    color: ButtonColorOption,
+  },
   props: ['product'],
   data() {
     return {
@@ -98,13 +82,18 @@ export default {
       img: this.$props.product.image,
       listProduct: [],
       curProduct: null,
-      isClickedColor: null,
-      isClickedSize: null,
+      isClicked: {
+        color: null,
+        size: null,
+      },
     };
   },
   computed: {
     brands() {
       return this.$store.getters['brands/getBrands'];
+    },
+    currentBrand() {
+      return this.brands.find((brand) => brand.id === this.$props.product.brand).title;
     },
     loading() {
       return this.$store.getters['products/getIsLoading'];
@@ -126,10 +115,10 @@ export default {
       localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
     },
 
-    filterOption(id, variants, opt) {
+    filterOption(id) {
       this.curProduct = null;
-      this.isClickedSize = null;
-      const sizeOption = variants.filter((el) => el.attributes.find((i) => i.value_index === id));
+      this.isClicked.size = null;
+      const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
       this.listProduct = sizeOption;
 
       // this.img = sizeOption.find(el => el).product.image;
@@ -140,7 +129,7 @@ export default {
         })
         .flat();
 
-      const objSize = opt.find((el) => el.attribute_code === 'size');
+      const objSize = this.confOptions.find((el) => el.attribute_code === 'size');
       const sizeIdx = filterSize.map((s) => s.value_index);
 
       this.sizeArr = sizeIdx.map((l) => {

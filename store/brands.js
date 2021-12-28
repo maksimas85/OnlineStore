@@ -7,19 +7,19 @@ export const mutations = {
     state.brands = brands;
   },
   loadingBrands(state, payload) {
-    state.brands = payload
-  }
+    state.brands = payload;
+  },
 };
 
 export const actions = {
   async getBrands({ commit }) {
     const brands = await this.$axios.$get(
-      "https://raw.githubusercontent.com/fe-side/vue-test/master/assets/brands.json"
+      'https://raw.githubusercontent.com/fe-side/vue-test/master/assets/brands.json'
     );
-    commit("setBrands", brands);
+    commit('setBrands', brands);
   },
   loadingBrandsFromLocalStorage({ commit }, payload) {
-    commit("loadingBrands", payload);
+    commit('loadingBrands', payload);
   },
 };
 

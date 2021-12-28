@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import ProductList from "~/components/ProductList";
+import ProductList from '~/components/ProductList';
 export default {
   components: { ProductList },
-  layout: "default",
+  layout: 'default',
   computed: {
     products() {
       return this.$store.state.products;

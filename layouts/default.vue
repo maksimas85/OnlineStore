@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-import SideMenu from "~/components/SideMenu";
+import SideMenu from '~/components/SideMenu';
 export default {
   components: { SideMenu },
 };
@@ -22,12 +22,13 @@ export default {
 
 <style>
 .slide-fade-enter-active {
-  transition: all .8s ease;
+  transition: all 0.8s ease;
 }
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
-.slide-fade-enter, .slide-fade-leave-to {
+.slide-fade-enter,
+.slide-fade-leave-to {
   transform: translateX(50px);
   opacity: 0;
 }

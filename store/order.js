@@ -11,7 +11,7 @@ export const mutations = {
     if (foundProduct) {
       foundProduct.qty++;
     } else {
-      this._vm.$set(product, "qty", 1);
+      this._vm.$set(product, 'qty', 1);
       state.cart.push(product);
     }
   },
@@ -35,16 +35,16 @@ export const mutations = {
 
 export const actions = {
   removeFromCart({ commit }, payload) {
-    commit("removeFromCart", payload);
+    commit('removeFromCart', payload);
   },
   removeProductFromCart({ commit }, payload) {
-    commit("removeProductFromCart", payload);
+    commit('removeProductFromCart', payload);
   },
   addProductInCart({ commit }, product) {
-    commit("addProductInCart", product);
+    commit('addProductInCart', product);
   },
   loadingCartFromLocalStorage({ commit }, payload) {
-    commit("loadingCart", payload);
+    commit('loadingCart', payload);
   },
 };
 
