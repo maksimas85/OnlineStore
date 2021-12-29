@@ -25,14 +25,7 @@
     </a>
     <div v-if="product.configurable_options">
       <div v-for="(option, index) in product.configurable_options" :key="index">
-        <component
-          :is="option.attribute_code"
-          :value="option.values"
-          :isClicked="isClicked"
-          :sizeArr="sizeArr"
-          @changeColor="filterOption"
-          @changeSize="filterProduct"
-        ></component>
+        <ButtonOption :option="option" @change[option.attribute_code]="changeFilter"></ButtonOption>
       </div>
     </div>
     <div class="mt-5">
@@ -64,15 +57,11 @@
 </template>
 
 <script>
-import ButtonSizeOption from '~/components/ButtonSizeOption';
-import ButtonColorOption from '~/components/ButtonColorOption';
+import ButtonOption from '~/components/ButtonOption';
 
 export default {
   name: 'ProductCard',
-  components: {
-    size: ButtonSizeOption,
-    color: ButtonColorOption,
-  },
+  components: { ButtonOption },
   props: ['product'],
   data() {
     return {
@@ -113,6 +102,10 @@ export default {
       }
       localStorage.setItem('cart', JSON.stringify(this.$store.getters['order/getProductsCart']));
       localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
+    },
+
+    changeFilter() {
+      console.log('changeFilter')
     },
 
     filterOption(id) {
