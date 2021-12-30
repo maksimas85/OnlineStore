@@ -1,8 +1,9 @@
 <template>
   <div class="flex">
     <button
-      class="sizeButton w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
-      @click="changeSize(value.value_index, index)"
+      class="optionButton w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
+      :class="{ 'border-yellow-500': idIndex === value.value_index }"
+      :disabled="false"
     >
       <span class="flex justify-center items-center w-full h-full text-xs">
         {{ value.label }}
@@ -10,13 +11,11 @@
     </button>
   </div>
 </template>
-<!--        :disabled="SizeInStock !== undefined ? val.label !== SizeInStock : false"-->
-<!--        :class="{ 'border-yellow-500': isClicked.size === index }"-->
 
 <script>
 export default {
   name: 'ButtonSizeOption',
-  props: ['value'],
+  props: ['value', 'idIndex', 'isDisabled'],
   // computed: {
   //   SizeInStock() {
   //     if (this.sizeArr && this.value && this.sizeArr.length !== this.value.length) {
@@ -24,18 +23,12 @@ export default {
   //       return this.value[idx].label;
   //     }
   //   },
-  // },
-  // methods: {
-  //   changeSize(id, index) {
-  //     this.isClicked.size = index;
-  //     this.$emit('changeSize', id);
-  //   },
-  // },
+  // }
 };
 </script>
 
 <style scoped>
-.sizeButton:disabled {
+.optionButton:disabled {
   border: 2px solid gray !important;
   background-color: lightgray;
 }

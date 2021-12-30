@@ -25,7 +25,7 @@
     </a>
     <div v-if="product.configurable_options">
       <div v-for="(option, index) in product.configurable_options" :key="index">
-        <ButtonOption :option="option" @change[option.attribute_code]="changeFilter"></ButtonOption>
+        <ButtonOption :option="option" :product="product" @changeOption="changeFilter"/>
       </div>
     </div>
     <div class="mt-5">
@@ -65,16 +65,12 @@ export default {
   props: ['product'],
   data() {
     return {
-      variants: this.$props.product.variants,
-      confOptions: this.$props.product.configurable_options,
-      sizeArr: null,
       img: this.$props.product.image,
-      listProduct: [],
-      curProduct: null,
-      isClicked: {
-        color: null,
-        size: null,
-      },
+      // variants: this.$props.product.variants,
+      // confOptions: this.$props.product.configurable_options,
+      // sizeArr: null,
+      // listProduct: [],
+      // curProduct: null
     };
   },
   computed: {
@@ -104,39 +100,48 @@ export default {
       localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
     },
 
-    changeFilter() {
-      console.log('changeFilter')
+    changeFilter(id, code) {
+      console.log('changeFilter', id);
+      console.log('changeFilter', code);
+      // if (code === 'color') {
+      //   this.filterOption(id);
+      // }
+      // if (code === 'size') {
+      //   this.filterProduct(id)
+      // }
     },
 
-    filterOption(id) {
-      this.curProduct = null;
-      this.isClicked.size = null;
-      const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
-      this.listProduct = sizeOption;
-
-      // this.img = sizeOption.find(el => el).product.image;
-
-      const filterSize = sizeOption
-        .map((item) => {
-          return item.attributes.filter((i) => i.code === 'size');
-        })
-        .flat();
-
-      const objSize = this.confOptions.find((el) => el.attribute_code === 'size');
-      const sizeIdx = filterSize.map((s) => s.value_index);
-
-      this.sizeArr = sizeIdx.map((l) => {
-        return objSize.values.find((el) => el.value_index === l);
-      });
-    },
-
-    filterProduct(id) {
-      if (this.listProduct.length) {
-        this.curProduct = this.listProduct.find((item) => {
-          return item.attributes.find((el) => el.value_index === id);
-        });
-      }
-    },
+    // filterOption(id) {
+    //   this.curProduct = null;
+    //
+    //   // this.isClicked = null;
+    //
+    //   const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
+    //   this.listProduct = sizeOption;
+    //
+    //   // this.img = sizeOption.find(el => el).product.image;
+    //
+    //   const filterSize = sizeOption
+    //     .map((item) => {
+    //       return item.attributes.filter((i) => i.code === 'size');
+    //     })
+    //     .flat();
+    //
+    //   const objSize = this.confOptions.find((el) => el.attribute_code === 'size');
+    //   const sizeIdx = filterSize.map((s) => s.value_index);
+    //
+    //   this.sizeArr = sizeIdx.map((l) => {
+    //     return objSize.values.find((el) => el.value_index === l);
+    //   });
+    // },
+    //
+    // filterProduct(id) {
+    //   if (this.listProduct.length) {
+    //     this.curProduct = this.listProduct.find((item) => {
+    //       return item.attributes.find((el) => el.value_index === id);
+    //     });
+    //   }
+    // },
   },
 };
 </script>
