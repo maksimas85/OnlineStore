@@ -1,7 +1,14 @@
 <template>
   <div class="flex flex-row">
-    <div v-for="value in option.values" @click="someFunc(value.value_index, option.attribute_code)" class="my-0.5">
-      <component :is="option.attribute_code" :value="value" :isDisabled="isDisabledIndex" :idIndex="idIndex" :key="value.value_index"></component>
+    <div v-for="value in option.values" @click="changeOptions(value.value_index, option.attribute_code)" class="my-0.5">
+      <component
+        :is="option.attribute_code"
+        :code="option.attribute_code"
+        :idIndex="idIndex"
+        :listProduct="listProduct"
+        :value="value"
+        :key="value.value_index"
+      ></component>
     </div>
   </div>
 </template>
@@ -16,33 +23,30 @@ export default {
     color: ButtonColorOption,
     size: ButtonSizeOption,
   },
-  props: ['option', 'product'],
+  props: ['option', 'product', 'listProduct'],
   data() {
     return {
       idIndex: null,
       code: null,
       variants: this.$props.product.variants,
-      isDisabledIndex: null
-    }
+      isDisabledIndex: null,
+    };
   },
   methods: {
-    someFunc(index, code) {
+    changeOptions(index, code) {
       this.code = code;
       this.idIndex = index;
-      this.$emit('changeOption', index, code)
       this.isDisabledOption(index, code);
+      this.$emit('changeOption', this.isDisabledIndex, code);
     },
     isDisabledOption(id, code) {
-      console.log(id);
-      console.log(code);
       const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
-      console.log(sizeOption);
       this.isDisabledIndex = sizeOption
         .map((item) => {
-          return item.attributes.filter((i) => i.code === 'size');
+          return item.attributes.filter((i) => i.code !== code);
         })
         .flat();
-    }
+    },
   },
 };
 </script>

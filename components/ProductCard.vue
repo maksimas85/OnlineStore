@@ -25,7 +25,7 @@
     </a>
     <div v-if="product.configurable_options">
       <div v-for="(option, index) in product.configurable_options" :key="index">
-        <ButtonOption :option="option" :product="product" @changeOption="changeFilter"/>
+        <ButtonOption :option="option" :product="product" :listProduct="listProduct" @changeOption="changeFilter"/>
       </div>
     </div>
     <div class="mt-5">
@@ -69,7 +69,10 @@ export default {
       // variants: this.$props.product.variants,
       // confOptions: this.$props.product.configurable_options,
       // sizeArr: null,
-      // listProduct: [],
+      listProduct: {
+        color: null,
+        size: null
+      },
       // curProduct: null
     };
   },
@@ -100,15 +103,8 @@ export default {
       localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
     },
 
-    changeFilter(id, code) {
-      console.log('changeFilter', id);
-      console.log('changeFilter', code);
-      // if (code === 'color') {
-      //   this.filterOption(id);
-      // }
-      // if (code === 'size') {
-      //   this.filterProduct(id)
-      // }
+    changeFilter(arrOption, code) {
+      this.listProduct[code] = arrOption;
     },
 
     // filterOption(id) {

@@ -3,11 +3,11 @@
     <button
       class="optionButton w-7 h-4 mr-1 cursor-pointer border-2 border-solid border-black hover:border-yellow-500"
       :class="{ 'border-yellow-500': idIndex === value.value_index }"
-      :disabled="false"
+      :disabled="sizeInStock"
     >
-      <span class="flex justify-center items-center w-full h-full text-xs">
+      <p class="flex justify-center items-center w-full h-full text-xs">
         {{ value.label }}
-      </span>
+      </p>
     </button>
   </div>
 </template>
@@ -15,21 +15,26 @@
 <script>
 export default {
   name: 'ButtonSizeOption',
-  props: ['value', 'idIndex', 'isDisabled'],
-  // computed: {
-  //   SizeInStock() {
-  //     if (this.sizeArr && this.value && this.sizeArr.length !== this.value.length) {
-  //       const idx = this.value.findIndex((el) => el.label === this.sizeArr.find((el) => el).label);
-  //       return this.value[idx].label;
-  //     }
-  //   },
-  // }
+  props: ['value', 'code', 'idIndex', 'listProduct'],
+  data() {
+    return {
+      val: this.$props.value,
+    };
+  },
+  computed: {
+    sizeInStock() {
+      if (this.$props?.listProduct?.color?.length &&
+        this.$props.listProduct.color.some((el) => el.code === this.$props.code)) {
+          return !this.$props.listProduct.color.find((item) => item.value_index === this.val.value_index);
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .optionButton:disabled {
   border: 2px solid gray !important;
-  background-color: lightgray;
+  background-color: lightgray !important;
 }
 </style>
