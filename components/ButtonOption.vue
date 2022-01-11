@@ -37,7 +37,7 @@ export default {
       this.code = code;
       this.idIndex = index;
       this.isDisabledOption(index, code);
-      this.$emit('changeOption', this.isDisabledIndex, code);
+      this.$emit('changeOption', this.isDisabledIndex, code, index);
     },
     isDisabledOption(id, code) {
       const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));

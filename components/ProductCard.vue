@@ -66,14 +66,17 @@ export default {
   data() {
     return {
       img: this.$props.product.image,
-      // variants: this.$props.product.variants,
+      variants: this.$props.product.variants,
       // confOptions: this.$props.product.configurable_options,
       // sizeArr: null,
       listProduct: {
         color: null,
         size: null
       },
-      // curProduct: null
+      curProduct: {
+        color: null,
+        size: null
+      },
     };
   },
   computed: {
@@ -93,28 +96,46 @@ export default {
         this.$store.dispatch('order/addProductInCart', item);
       }
 
-      if (item.type === 'configurable' && this.curProduct?.product?.id) {
+      if (item.type === 'configurable' && this.curProduct?.color && this.curProduct?.size) {
+        const currentEl = this.variants.find((item) => {
+
+
+
+
+          return item.attributes.map((el) => {
+            let code = el.code;
+            return el.value_index === this.curProduct[code]
+          });
+
+        });
+
+        console.log(currentEl);
+
         this.$store.dispatch('order/addProductInCart', {
           ...item,
-          id: this.curProduct.product.id,
+          id: currentEl.product.id
         });
       }
       localStorage.setItem('cart', JSON.stringify(this.$store.getters['order/getProductsCart']));
       localStorage.setItem('brands', JSON.stringify(this.$store.getters['brands/getBrands']));
     },
 
-    changeFilter(arrOption, code) {
+    changeFilter(arrOption, code, id) {
+      this.curProduct[code] = id;
       this.listProduct[code] = arrOption;
     },
 
     // filterOption(id) {
-    //   this.curProduct = null;
     //
-    //   // this.isClicked = null;
+    //   // curProduct: {
+    //   //   colorId: null,
+    //   //   sizeId: null
+    //   // }
+    //
+    //   // this.curProduct = null;
     //
     //   const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
-    //   this.listProduct = sizeOption;
-    //
+    //   // this.listProduct = sizeOption;
     //   // this.img = sizeOption.find(el => el).product.image;
     //
     //   const filterSize = sizeOption
@@ -130,7 +151,7 @@ export default {
     //     return objSize.values.find((el) => el.value_index === l);
     //   });
     // },
-    //
+
     // filterProduct(id) {
     //   if (this.listProduct.length) {
     //     this.curProduct = this.listProduct.find((item) => {
