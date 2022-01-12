@@ -25,7 +25,7 @@
     </a>
     <div v-if="product.configurable_options">
       <div v-for="(option, index) in product.configurable_options" :key="index">
-        <ButtonOption :option="option" :product="product" :listProduct="listProduct" @changeOption="changeFilter"/>
+        <ButtonOption :option="option" :product="product" :listProduct="listProduct" @changeOption="changeFilter" />
       </div>
     </div>
     <div class="mt-5">
@@ -71,11 +71,11 @@ export default {
       // sizeArr: null,
       listProduct: {
         color: null,
-        size: null
+        size: null,
       },
       curProduct: {
         color: null,
-        size: null
+        size: null,
       },
     };
   },
@@ -97,23 +97,19 @@ export default {
       }
 
       if (item.type === 'configurable' && this.curProduct?.color && this.curProduct?.size) {
-        const currentEl = this.variants.find((item) => {
-
-
-
-
-          return item.attributes.map((el) => {
-            let code = el.code;
-            return el.value_index === this.curProduct[code]
+        const currentEl = {};
+        this.variants.forEach((el) => {
+          currentEl[el.product.id] = el.product;
+          el.attributes.forEach((item) => {
+            currentEl[el.product.id][item.code] = item;
           });
-
         });
 
-        console.log(currentEl);
+        const currentProductId = Object.values(currentEl).find(el => el.color.value_index === this.curProduct.color && el.size.value_index === this.curProduct.size).id
 
         this.$store.dispatch('order/addProductInCart', {
           ...item,
-          id: currentEl.product.id
+          id: currentProductId,
         });
       }
       localStorage.setItem('cart', JSON.stringify(this.$store.getters['order/getProductsCart']));
