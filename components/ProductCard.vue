@@ -67,8 +67,6 @@ export default {
     return {
       img: this.$props.product.image,
       variants: this.$props.product.variants,
-      // confOptions: this.$props.product.configurable_options,
-      // sizeArr: null,
       listProduct: {
         color: null,
         size: null,
@@ -105,7 +103,9 @@ export default {
           });
         });
 
-        const currentProductId = Object.values(currentEl).find(el => el.color.value_index === this.curProduct.color && el.size.value_index === this.curProduct.size).id
+        const currentProductId = Object.values(currentEl).find(
+          (el) => el.color.value_index === this.curProduct.color && el.size.value_index === this.curProduct.size
+        ).id;
 
         this.$store.dispatch('order/addProductInCart', {
           ...item,
@@ -120,41 +120,6 @@ export default {
       this.curProduct[code] = id;
       this.listProduct[code] = arrOption;
     },
-
-    // filterOption(id) {
-    //
-    //   // curProduct: {
-    //   //   colorId: null,
-    //   //   sizeId: null
-    //   // }
-    //
-    //   // this.curProduct = null;
-    //
-    //   const sizeOption = this.variants.filter((el) => el.attributes.find((i) => i.value_index === id));
-    //   // this.listProduct = sizeOption;
-    //   // this.img = sizeOption.find(el => el).product.image;
-    //
-    //   const filterSize = sizeOption
-    //     .map((item) => {
-    //       return item.attributes.filter((i) => i.code === 'size');
-    //     })
-    //     .flat();
-    //
-    //   const objSize = this.confOptions.find((el) => el.attribute_code === 'size');
-    //   const sizeIdx = filterSize.map((s) => s.value_index);
-    //
-    //   this.sizeArr = sizeIdx.map((l) => {
-    //     return objSize.values.find((el) => el.value_index === l);
-    //   });
-    // },
-
-    // filterProduct(id) {
-    //   if (this.listProduct.length) {
-    //     this.curProduct = this.listProduct.find((item) => {
-    //       return item.attributes.find((el) => el.value_index === id);
-    //     });
-    //   }
-    // },
   },
 };
 </script>
